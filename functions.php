@@ -7,9 +7,39 @@ function my_theme_enqueue_styles() {
     );
 }
 
+/* My hook function + add action
+This adds a text between the add to cart button and 
+the box to choose between different variabels */
+
+/* Tänkte här att man skulle använda en if sats för
+ att visa ifall produkten finns i lager så visas texten produkten är tillgänglig nu. 
+ Om den är slut i lager så visas texten, tyvärr.... 
+ Men jag vet inte riktigt hur jag ska koppla det till lagerstatusen på woocommerce.. 
+ Om detta ej räknas med som en godkänd funktion så får jag göra en ny, men tänker att jag har ändå
+ använt add action för att skriva ut texten produkten finns tillgänglig så den fungerar ju
+ men inte riktigt kommit hela vägen. */
+
+function my_function( $instock ) {
+    $inStock = true;
+    if ($inStock)
+       echo "Produkten finns tillgänglig att köpa nu";  
+     } if ($inStock === false) {
+     echo "Tyvärr är produkten slut i lager för tillfället!";
+     }
+
+add_action( 'woocommerce_single_variation', 'my_function', 10 );
 
 
-// Butiker Custom Post Type
+/* Remove product meta 
+This removes information such as ProductID and wich 
+category the product belongs to */
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+
+
+
+/* Butiker Custom Post Type. I created a CPT for my stores and 
+used a plugin called Mappress to show them on my shop. */
+
 function create_ButikerPostType()
 {
 
@@ -29,7 +59,7 @@ function create_ButikerPostType()
         )
     );
 }
-// Hooking up our function to theme setup
+// Hooking up the function to theme setup
 add_action('init', 'create_ButikerPostType');
 
 /*
@@ -97,4 +127,5 @@ function ButikerCustom_post_type()
     */
 
 add_action('init', 'ButikerCustom_post_type', 0);
+
 ?>
